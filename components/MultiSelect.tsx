@@ -12,6 +12,7 @@ export function MultiSelect({
   className,
   ensureIncludes,
   id,
+  hasError,
 }: {
   options: readonly string[];
   values: string[];
@@ -20,6 +21,7 @@ export function MultiSelect({
   /** 특정 값이 항상 포함되도록 강제 (예: 'global') */
   ensureIncludes?: string;
   id?: string;
+  hasError?: boolean;
 }) {
   function applyEnsureIncludes(next: string[]) {
     if (!ensureIncludes) return next;
@@ -34,7 +36,12 @@ export function MultiSelect({
   }
 
   return (
-    <div id={id} className={`rounded-md border p-2 ${className ?? ""}`}>
+    <div
+      id={id}
+      className={`rounded-md border p-2 ${hasError ? "border-red-500" : ""} ${
+        className ?? ""
+      }`}
+    >
       <div className="mb-2 flex flex-wrap gap-2">
         {values.map((v) => (
           <span key={v} className="rounded bg-secondary px-2 py-1 text-xs">

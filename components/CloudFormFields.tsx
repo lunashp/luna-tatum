@@ -125,6 +125,7 @@ export function CloudFormFields({
               options={Array.from(CLOUD_GROUP_NAMES)}
               values={(form.cloudGroupName as string[]) ?? []}
               onChange={(vals) => onChange("cloudGroupName", vals as any)}
+              hasError={Boolean(errors?.cloudGroupName)}
             />
             <p className="mt-1 text-xs text-gray-500">
               Select one or more groups to organize this cloud.
@@ -146,6 +147,7 @@ export function CloudFormFields({
               values={(form.regionList as string[]) ?? []}
               onChange={(vals) => onChange("regionList", vals as any)}
               ensureIncludes="global"
+              hasError={Boolean(errors?.regionList)}
             />
             <p className="mt-1 text-xs text-gray-500">
               Select one or more regions. Global is required for control-plane
@@ -245,7 +247,11 @@ export function CloudFormFields({
                 <Label>Day of Week</Label>
                 <select
                   id="schedule-weekday"
-                  className="h-9 w-full rounded-md border border-input bg-white px-3 text-sm"
+                  className={`h-9 w-full rounded-md border px-3 text-sm ${
+                    Boolean(errors?.["schedule.weekday"])
+                      ? "border-red-500"
+                      : "border-input"
+                  } bg-white`}
                   disabled={scheduleDisabled.weekday}
                   value={(form.scheduleScanSetting as any)?.weekday ?? "MON"}
                   onChange={(e) =>

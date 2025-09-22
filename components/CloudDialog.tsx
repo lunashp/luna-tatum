@@ -28,6 +28,7 @@ export default function CloudDialog({
 }: Props) {
   const isEdit = Boolean(cloudId);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   // 폼 데이터 상태: 다이얼로그에서만 보유하고, UI는 CloudFormFields로 위임
   const [form, setForm] = useState<Partial<Cloud>>({
@@ -131,13 +132,28 @@ export default function CloudDialog({
       focusErrorField(firstErrorKey);
       return;
     }
+
+    setSubmitting(true);
     const payload = { ...(form as Cloud) };
     if (isEdit && cloudId) payload.id = cloudId;
+
     // 실제 환경이라면 API 요청 수행
     // eslint-disable-next-line no-console
     console.log("Submit Cloud Payload:", payload);
-    onOpenChange(false);
-    onSubmitted(payload);
+
+    // 성공 시뮬레이션 (실제로는 API 응답 후 처리)
+    setTimeout(() => {
+      setSubmitting(false);
+      onOpenChange(false);
+      onSubmitted(payload);
+    }, 1000);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter" && !submitting) {
+      e.preventDefault();
+      onSubmit();
+    }
   }
 
   function focusErrorField(errorKey: string) {
@@ -184,7 +200,10 @@ export default function CloudDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <div className="flex flex-col max-h-[80vh] my-8">
+      <div
+        className="flex flex-col max-h-[80vh] my-8"
+        onKeyDown={handleKeyDown}
+      >
         <DialogHeader>{isEdit ? "Edit Cloud" : "Create Cloud"}</DialogHeader>
         {loading ? (
           <div className="p-6 text-sm text-gray-500">Loading...</div>
@@ -195,10 +214,20 @@ export default function CloudDialog({
           <Button
             className="bg-secondary text-black"
             onClick={() => onOpenChange(false)}
+            disabled={submitting}
           >
             취소
           </Button>
-          <Button onClick={onSubmit}>확인</Button>
+          <Button onClick={onSubmit} disabled={submitting}>
+            {submitting ? (
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                처리 중...
+              </div>
+            ) : (
+              "확인"
+            )}
+          </Button>
         </DialogFooter>
       </div>
     </Dialog>

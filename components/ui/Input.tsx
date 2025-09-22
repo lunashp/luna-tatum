@@ -12,6 +12,7 @@ export function Input({
     <input
       className={cn(
         "flex h-9 w-full rounded-md border border-input bg-white px-3 text-sm shadow-sm outline-none ring-offset-0 focus:ring-2 focus:ring-ring",
+        props["aria-invalid"] && "border-red-500 focus:ring-red-500",
         className
       )}
       {...props}
