@@ -64,6 +64,7 @@ export function CloudFormFields({
               Cloud Name <span className="text-red-500">*</span>
             </Label>
             <Input
+              id="cloud-name"
               placeholder="Please enter the cloud name."
               aria-invalid={Boolean(errors?.name) || undefined}
               value={form.name ?? ""}
@@ -120,6 +121,7 @@ export function CloudFormFields({
               Cloud Group <span className="text-red-500">*</span>
             </Label>
             <MultiSelect
+              id="cloud-group-name"
               options={Array.from(CLOUD_GROUP_NAMES)}
               values={(form.cloudGroupName as string[]) ?? []}
               onChange={(vals) => onChange("cloudGroupName", vals as any)}
@@ -139,6 +141,7 @@ export function CloudFormFields({
               <span className="text-red-500">*</span>
             </Label>
             <MultiSelect
+              id="region-list"
               options={Array.from(AWSRegionList)}
               values={(form.regionList as string[]) ?? []}
               onChange={(vals) => onChange("regionList", vals as any)}
@@ -206,6 +209,7 @@ export function CloudFormFields({
               <div>
                 <Label>Minute</Label>
                 <Input
+                  id="schedule-minute"
                   value={(form.scheduleScanSetting as any)?.minute ?? "0"}
                   onChange={(e) =>
                     onChange("scheduleScanSetting", {
@@ -220,6 +224,7 @@ export function CloudFormFields({
               <div>
                 <Label>Hour</Label>
                 <Input
+                  id="schedule-hour"
                   disabled={scheduleDisabled.hour}
                   aria-invalid={Boolean(errors?.["schedule.hour"]) || undefined}
                   value={(form.scheduleScanSetting as any)?.hour ?? "0"}
@@ -239,6 +244,7 @@ export function CloudFormFields({
               <div>
                 <Label>Day of Week</Label>
                 <select
+                  id="schedule-weekday"
                   className="h-9 w-full rounded-md border border-input bg-white px-3 text-sm"
                   disabled={scheduleDisabled.weekday}
                   value={(form.scheduleScanSetting as any)?.weekday ?? "MON"}
@@ -266,6 +272,7 @@ export function CloudFormFields({
               <div>
                 <Label>Date (1~28)</Label>
                 <Input
+                  id="schedule-date"
                   disabled={scheduleDisabled.date}
                   aria-invalid={Boolean(errors?.["schedule.date"]) || undefined}
                   value={(form.scheduleScanSetting as any)?.date ?? "1"}
@@ -296,6 +303,7 @@ export function CloudFormFields({
                 Access Key <span className="text-red-500">*</span>
               </Label>
               <Input
+                id="access-key-id"
                 value={(form.credentials as any)?.accessKeyId ?? ""}
                 aria-invalid={
                   Boolean(errors?.["credentials.accessKeyId"]) || undefined
@@ -319,6 +327,7 @@ export function CloudFormFields({
               </Label>
               <div className="relative">
                 <Input
+                  id="secret-access-key"
                   type={showSecret ? "text" : "password"}
                   value={(form.credentials as any)?.secretAccessKey ?? ""}
                   aria-invalid={
@@ -359,6 +368,7 @@ export function CloudFormFields({
               CloudTrail Name <span className="text-red-500">*</span>
             </Label>
             <Input
+              id="cloudtrail-name"
               placeholder="Please enter the cloud trail name."
               aria-invalid={
                 Boolean(errors?.["eventSource.cloudTrailName"]) || undefined

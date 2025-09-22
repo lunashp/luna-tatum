@@ -125,7 +125,12 @@ export default function CloudDialog({
   function onSubmit() {
     const e = validate(form);
     setErrors(e);
-    if (Object.keys(e).length > 0) return;
+    if (Object.keys(e).length > 0) {
+      // 첫 번째 에러 필드로 포커싱
+      const firstErrorKey = Object.keys(e)[0];
+      focusErrorField(firstErrorKey);
+      return;
+    }
     const payload = { ...(form as Cloud) };
     if (isEdit && cloudId) payload.id = cloudId;
     // 실제 환경이라면 API 요청 수행
@@ -133,6 +138,48 @@ export default function CloudDialog({
     console.log("Submit Cloud Payload:", payload);
     onOpenChange(false);
     onSubmitted(payload);
+  }
+
+  function focusErrorField(errorKey: string) {
+    // 에러 키를 실제 DOM 요소 ID로 매핑
+    const fieldIdMap: Record<string, string> = {
+      name: "cloud-name",
+      cloudGroupName: "cloud-group-name",
+      regionList: "region-list",
+      "credentials.accessKeyId": "access-key-id",
+      "credentials.secretAccessKey": "secret-access-key",
+      "eventSource.cloudTrailName": "cloudtrail-name",
+      "schedule.minute": "schedule-minute",
+      "schedule.hour": "schedule-hour",
+      "schedule.weekday": "schedule-weekday",
+      "schedule.date": "schedule-date",
+    };
+
+    const fieldId = fieldIdMap[errorKey];
+    if (fieldId) {
+      // 약간의 지연 후 포커싱 (DOM 업데이트 대기)
+      setTimeout(() => {
+        let element = document.getElementById(fieldId);
+
+        // MultiSelect의 경우 첫 번째 체크박스로 포커싱
+        if (
+          (errorKey === "cloudGroupName" || errorKey === "regionList") &&
+          element
+        ) {
+          const firstCheckbox = element.querySelector(
+            'input[type="checkbox"]'
+          ) as HTMLInputElement;
+          if (firstCheckbox) {
+            element = firstCheckbox;
+          }
+        }
+
+        if (element) {
+          element.focus();
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 100);
+    }
   }
 
   return (
